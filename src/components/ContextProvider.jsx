@@ -10,9 +10,9 @@ const initialLists = [
     id: 1,
     name: "Homework",
     tasks: [
-      { id: 1, name: "JavaScript DOM" },
-      { id: 2, name: "Rust 101" },
-      { id: 3, name: "HTML/CSS templating" },
+      { id: 1, name: "JavaScript DOM", selected: false },
+      { id: 2, name: "Rust 101", selected: false },
+      { id: 3, name: "HTML/CSS templating", selected: false },
     ],
   },
 ]
@@ -25,7 +25,11 @@ const ContextProvider = (props) => {
   const [listId, setListId] = useState(2)
   const [taskId, setTaskId] = useState(4)
   const [lists, setList] = useState(initialLists)
-  const [tasks, setTask] = useState(initialLists.map((item) => item.tasks))
+  const [tasks, setTask] = useState(
+    initialLists && initialLists.map((item) => item.tasks)
+  )
+  const [currentList, setCurrentList] = useState(0)
+  const [maskedTask, toggleFilter] = useState(false)
 
   const getListId = useCallback(() => {
     setListId(listId + 1)
@@ -40,29 +44,37 @@ const ContextProvider = (props) => {
   }, [taskId])
 
   const createList = useCallback(
-    (user) => {
-      setList((users) => [
-        ...users,
+    (list) => {
+      setList((lists) => [
+        ...lists,
         {
           id: getListId(),
-          ...user,
+          name: list,
+          tasks: [
+            {
+              id: getTaskId,
+              name: "",
+              selected: false,
+            },
+          ],
         },
       ])
     },
-    [getListId]
+    [getListId, getTaskId]
   )
 
   const createTask = useCallback(
-    (task) => {
-      setTask((tasks) => [
-        ...tasks,
-        {
-          id: getTaskId(),
-          ...task,
-        },
-      ])
+    (task, currentList) => {
+      const newTask = lists.slice()
+      newTask[currentList].tasks.push({
+        id: getTaskId(),
+        name: task,
+        selected: false,
+      })
+      setList(newTask)
     },
-    [getTaskId]
+
+    [getTaskId, lists]
   )
 
   const deleteList = useCallback(
@@ -71,34 +83,54 @@ const ContextProvider = (props) => {
   )
 
   const deleteTask = useCallback(
-    (taskId) => setTask((tasks) => tasks.filter(({ id }) => id !== taskId)),
-    []
+    (taskId, currentList) => {
+      const deletedTask = lists.slice()
+      deletedTask[currentList].tasks = deletedTask[currentList].tasks.filter(
+        ({ id }) => id !== taskId
+      )
+      setList(deletedTask)
+    },
+    [lists]
   )
 
-  const updateList = useCallback((updatedList) => {
+  const updateList = useCallback((updatedToDo, listId) => {
     setList((lists) =>
-      lists.map((list) => (list.id === updatedList.id ? updatedList : list))
+      lists.map((list) =>
+        list.id === listId
+          ? { id: list.id, name: updatedToDo, tasks: list.tasks }
+          : list
+      )
     )
   }, [])
 
-  const updateTask = useCallback((updatedTask) => {
-    setTask((tasks) =>
-      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
-    )
-  }, [])
+  const updateTask = useCallback(
+    (updatedTask, currentList) => {
+      const updatedToDoTask = lists.slice()
+      updatedToDoTask[currentList].tasks = updatedToDoTask[
+        currentList
+      ].tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+      setList(updatedToDoTask)
+    },
+    [lists]
+  )
 
   return (
     <Context.Provider
       {...props}
       value={{
         lists,
+        currentList,
         tasks,
+        maskedTask,
         createList,
         createTask,
         deleteList,
         deleteTask,
         updateList,
         updateTask,
+        toggleFilter,
+        setCurrentList,
+        setTask,
       }}
     />
   )
