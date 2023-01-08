@@ -4,14 +4,14 @@ import { useRouter } from "next/router.js"
 import { useCallback } from "react"
 
 const CreateUserPage = () => {
-  const { createTask } = useContext()
+  const { createTask, currentList } = useContext()
   const router = useRouter()
   const handleSubmit = useCallback(
     (values) => {
-      createTask(values)
+      createTask(values, currentList)
       router.push("/")
     },
-    [router, createTask]
+    [router, createTask, currentList]
   )
 
   return <ToDoForm onSubmit={handleSubmit} />

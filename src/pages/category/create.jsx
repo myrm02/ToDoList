@@ -7,8 +7,8 @@ const CreateListPage = () => {
   const { createList } = useContext()
   const router = useRouter()
   const handleSubmit = useCallback(
-    (values) => {
-      createList(values)
+    ({ name }) => {
+      createList(name)
       router.push("/")
     },
     [router, createList]
