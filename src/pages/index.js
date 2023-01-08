@@ -1,6 +1,5 @@
 import Button from "@/components/Button.jsx"
 import { useContext } from "@/components/ContextProvider.jsx"
-import Link from "@/components/Link.jsx"
 import {
   TrashIcon,
   PencilSquareIcon,
@@ -9,14 +8,11 @@ import {
 } from "@heroicons/react/24/solid"
 // import { useCallback } from "react"
 import Head from "next/head.js"
+import Link from "next/link"
 
 const IndexPage = () => {
-  const edit = (
-    <>
-      <Link href={`/users/edit/`}>Edit</Link>
-    </>
-  )
-  const { users } = useContext()
+  const { lists, tasks } = useContext()
+
   // const handleClickDelete = useCallback(
   //   (event) => {
   //     const userId = Number.parseInt(
@@ -36,21 +32,34 @@ const IndexPage = () => {
       </Head>
       <table className="w-full mt-8">
         <thead>
-          <tr>
-            <th className="border-2 p-4">Nom catégorie</th>
-          </tr>
+          {lists.map((list) => (
+            <tr key={list.id} className="flex">
+              <th className="border-2 p-4">{list.name}</th>
+              <th>
+                <Button>
+                  <Link href={`/category/create`}>
+                    <PlusIcon className="w-6" />
+                  </Link>
+                </Button>
+              </th>
+            </tr>
+          ))}
         </thead>
         <tbody>
           <nav>
             <ul className="flex gap-4">
               <li>
                 <Button>
-                  <PlusIcon className="w-6" />
+                  <Link href={`/task/create`}>
+                    <PlusIcon className="w-6" />
+                  </Link>
                 </Button>
               </li>
               <li>
-                <Button onClick={edit}>
-                  <PencilSquareIcon className="w-6" />
+                <Button>
+                  <Link href={`/task/${tasks.id}/edit/`}>
+                    <PencilSquareIcon className="w-6" />
+                  </Link>
                 </Button>
               </li>
               <li>
@@ -65,16 +74,14 @@ const IndexPage = () => {
               </li>
             </ul>
           </nav>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td className="border px-4 py-2">
-                <div>
-                  <input type="color"></input>
-                </div>
-                {user.username}
+          {/* {lists.map((list) => (
+            <tr key={list.id}>
+              <td className=" flex border px-4 py-2">
+                <input type="color"></input>
+                {list.tasks.map((task) => task.name)}
               </td>
             </tr>
-          ))}
+          ))} */}
         </tbody>
       </table>
     </main>
