@@ -7,14 +7,14 @@ import * as yup from "yup"
 import FormHeader from "@/components/FormHeader"
 
 const defaultValidationSchema = yup.object().shape({
-  username: descriptionValidator.required(),
+  name: descriptionValidator.required(),
 })
 
 const defaultInitialValues = {
-  description: "",
+  name: "",
 }
 
-const UserForm = (props) => {
+const ToDoForm = (props) => {
   const {
     className,
     onSubmit,
@@ -30,10 +30,10 @@ const UserForm = (props) => {
         validationSchema={validationSchema}
       >
         <Form className={classNames("flex flex-col gap-4 p-4", className)}>
-          <FormField name="description" />
-          <Button className="mt-8">CANCEL</Button>
+          <FormField name="name" label="Description" />
+          <Button className="mt-8">Cancel</Button>
           <Button type="submit" className="mt-8">
-            SAVE
+            Save
           </Button>
         </Form>
       </Formik>
@@ -41,4 +41,4 @@ const UserForm = (props) => {
   )
 }
 
-export default UserForm
+export default ToDoForm
