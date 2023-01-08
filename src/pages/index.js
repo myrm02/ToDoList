@@ -34,7 +34,9 @@ const IndexPage = () => {
         <thead>
           {lists.map((list) => (
             <tr key={list.id} className="flex">
-              <th className="border-2 p-4">{list.name}</th>
+              <th className="border-2 p-4">
+                <a>{list.name}</a>
+              </th>
               <th>
                 <Button>
                   <Link href={`/category/create`}>
@@ -74,14 +76,21 @@ const IndexPage = () => {
               </li>
             </ul>
           </nav>
-          {/* {lists.map((list) => (
-            <tr key={list.id}>
-              <td className=" flex border px-4 py-2">
-                <input type="color"></input>
-                {list.tasks.map((task) => task.name)}
-              </td>
-            </tr>
-          ))} */}
+          {lists.map((list) => (
+            <>
+              {list.tasks.map((el) => (
+                <tr key={list.tasks.id}>
+                  <td className="border px-4 py-2">
+                    <input
+                      type="checkbox"
+                      defaultChecked={list.tasks.selected}
+                    ></input>
+                    {el.name}
+                  </td>
+                </tr>
+              ))}
+            </>
+          ))}
         </tbody>
       </table>
     </main>
