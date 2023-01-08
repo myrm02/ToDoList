@@ -7,14 +7,14 @@ const CreateUserPage = () => {
   const { createTask, currentList } = useContext()
   const router = useRouter()
   const handleSubmit = useCallback(
-    (values) => {
-      createTask(values, currentList)
+    ({ name }) => {
+      createTask(name, currentList)
       router.push("/")
     },
     [router, createTask, currentList]
   )
 
-  return <ToDoForm onSubmit={handleSubmit} />
+  return <ToDoForm onSubmit={handleSubmit} name="name" />
 }
 
 export default CreateUserPage
