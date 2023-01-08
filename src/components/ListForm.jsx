@@ -33,7 +33,7 @@ const ListForm = (props) => {
           <FormField name="name" label="Description" />
           <Button className="mt-8">Cancel</Button>
           <Button type="submit" className="mt-8">
-            Save
+            Create
           </Button>
         </Form>
       </Formik>

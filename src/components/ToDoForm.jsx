@@ -20,6 +20,7 @@ const ToDoForm = (props) => {
     onSubmit,
     initialValues = defaultInitialValues,
     validationSchema = defaultValidationSchema,
+    name = defaultInitialValues.name,
   } = props
 
   return (
@@ -30,10 +31,10 @@ const ToDoForm = (props) => {
         validationSchema={validationSchema}
       >
         <Form className={classNames("flex flex-col gap-4 p-4", className)}>
-          <FormField name="name" label="Description" />
+          <FormField name={name} label="Description" />
           <Button className="mt-8">Cancel</Button>
           <Button type="submit" className="mt-8">
-            Save
+            Create
           </Button>
         </Form>
       </Formik>
