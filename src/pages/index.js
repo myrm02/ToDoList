@@ -6,24 +6,45 @@ import {
   PlusIcon,
   CheckCircleIcon,
 } from "@heroicons/react/24/solid"
-// import { useCallback } from "react"
+import { useCallback } from "react"
 import Head from "next/head.js"
 import Link from "next/link"
 
 const IndexPage = () => {
-  const { lists, tasks } = useContext()
+  const {
+    lists,
+    tasks,
+    currentList,
+    updateTask,
+    updatedTask,
+    deleteTask,
+    deleteList,
+  } = useContext()
 
-  // const handleClickDelete = useCallback(
-  //   (event) => {
-  //     const userId = Number.parseInt(
-  //       event.currentTarget.getAttribute("data-user-id"),
-  //       10
-  //     )
+  const handleClickDeleteList = useCallback(() => {
+    deleteList(currentList)
+  }, [deleteList, currentList])
 
-  //     deleteUser(userId)
-  //   },
-  //   [deleteUser]
-  // )
+  const handleClickDeleteTask = useCallback(
+    (event) => {
+      const taskId = Number.parseInt(
+        event.currentTarget.getAttribute("data-task-id"),
+        10
+      )
+
+      deleteTask(taskId, currentList)
+    },
+    [deleteTask, currentList]
+  )
+
+  const handleToggle = useCallback(() => {
+    const updatedTask = {
+      id: lists.tasks.id,
+      name: lists.tasks.name,
+      selected: !lists.tasks.selected,
+    }
+    updateTask(currentList, updatedTask)
+  }, [currentList, updatedTask, lists])
 
   return (
     <main className="flex flex-col">
@@ -35,7 +56,10 @@ const IndexPage = () => {
           {lists.map((list) => (
             <tr key={list.id} className="flex">
               <th className="border-2 p-4">
-                <a>{list.name}</a>
+                <a href={list.id}>{list.name}</a>
+                <span className="bg-lime-500 px-2 rounded-l-full">
+                  {list.tasks.length}
+                </span>
               </th>
               <th>
                 <Button>
@@ -65,12 +89,12 @@ const IndexPage = () => {
                 </Button>
               </li>
               <li>
-                <Button>
+                <Button onClick={handleClickDeleteList}>
                   <TrashIcon className="w-6" />
                 </Button>
               </li>
               <li>
-                <Button>
+                <Button onClick={handleToggle}>
                   <CheckCircleIcon className="w-6" />
                 </Button>
               </li>
@@ -81,11 +105,21 @@ const IndexPage = () => {
               {list.tasks.map((el) => (
                 <tr key={list.tasks.id}>
                   <td className="border px-4 py-2">
-                    <input
-                      type="checkbox"
-                      defaultChecked={list.tasks.selected}
-                    ></input>
-                    {el.name}
+                    {list.tasks.name !== "" ? (
+                      <></>
+                    ) : (
+                      <input
+                        type="checkbox"
+                        defaultChecked={list.tasks.selected}
+                      ></input>
+                    )}
+                    <Link href={`/task/${list.tasks.id}/edit/`}>{el.name}</Link>
+                    <Button onClick={handleClickDeleteTask}>
+                      <TrashIcon
+                        className="invisible group-hover:visible w-6 ml-auto cursor-pointer duration-75"
+                        data-task-id={list.tasks.id}
+                      />
+                    </Button>
                   </td>
                 </tr>
               ))}
