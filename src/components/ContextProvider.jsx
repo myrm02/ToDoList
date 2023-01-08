@@ -27,7 +27,7 @@ const ContextProvider = (props) => {
   const [lists, setList] = useState(initialLists)
   const [tasks, setTask] = useState(initialLists.map((item) => item.tasks))
 
-  const getNextId = useCallback(() => {
+  const getListId = useCallback(() => {
     setListId(listId + 1)
 
     return listId
@@ -39,17 +39,17 @@ const ContextProvider = (props) => {
     return taskId
   }, [taskId])
 
-  const createUser = useCallback(
+  const createList = useCallback(
     (user) => {
       setList((users) => [
         ...users,
         {
-          id: getNextId(),
+          id: getListId(),
           ...user,
         },
       ])
     },
-    [getNextId]
+    [getListId]
   )
 
   const createTask = useCallback(
@@ -93,7 +93,7 @@ const ContextProvider = (props) => {
       value={{
         lists,
         tasks,
-        createUser,
+        createList,
         createTask,
         deleteList,
         deleteTask,
